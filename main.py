@@ -29,7 +29,7 @@ def get_post_by_id(id: int):
         return {"Post": posts[id - 1]}
 
 
-# create a post using websokects
+# create a post
 @app.post("/posts", tags=["posts"])
 def create_post(post: PostSchema):
     post.id = len(posts) + 1
