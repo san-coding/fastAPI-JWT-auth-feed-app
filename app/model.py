@@ -14,3 +14,31 @@ class PostSchema(BaseModel):
                 "content": "This is a demo post",
             }
         }
+
+
+class UserSchema(BaseModel):
+    fullname: str = Field(default=None)
+    email: EmailStr = Field(default=None)
+    password: str = Field(default=None)
+
+    class Config:
+        the_schema = {
+            "user_demo": {
+                "fullname": "User Demo",
+                "email": "sandeep@gmail.com",
+                "password": "1234",
+            }
+        }
+
+
+class UserLoginSchema(BaseModel):
+    email: EmailStr = Field(default=None)
+    password: str = Field(default=None)
+
+    class Config:
+        the_schema = {
+            "user_demo": {
+                "email": "sandeep@gmail.com",
+                "password": "1234",
+            }
+        }
