@@ -35,42 +35,42 @@ def send_users():
             collection.insert_one(user)
 
 
-def get_posts():
+def update_posts():
     db = client.fastapiJWT
     collection = db.posts
-    return collection.find()
+    files = collection.find()
+    global posts
+    posts = []
+    for file in files:
+        posts.append(
+            {
+                "id": file["id"],
+                "title": file["title"],
+                "content": file["content"],
+                "author": file["author"],
+            }
+        )
+
+
+update_posts()
 
 
 def get_users():
     db = client.fastapiJWT
     collection = db.users
-    return collection.find()
+    user_files = collection.find()
+    global users
+    users = []
+    for file in user_files:
+        # add only name, username, password to users
+        users.append(
+            {
+                "name": file["name"],
+                "username": file["username"],
+                "password": file["password"],
+            }
+        )
 
-
-# storing posts in memory from mongo db
-post_files = get_posts()
-for file in post_files:
-    # add only id, title, content, author to posts
-    posts.append(
-        {
-            "id": file["id"],
-            "title": file["title"],
-            "content": file["content"],
-            "author": file["author"],
-        }
-    )
-
-# storing users in memory from  mongo db
-user_files = get_users()
-for file in user_files:
-    # add only name, username, password to users
-    users.append(
-        {
-            "name": file["name"],
-            "username": file["username"],
-            "password": file["password"],
-        }
-    )
 
 # homepage
 @app.get("/", tags=["Welcome to JWT Authenticated feed app, connected to MongoDB"])
@@ -94,9 +94,10 @@ def view_functionalities():
     ]
 
 
+print(len(posts))
 # user registration
 @app.post("/register", status_code=201, tags=["User Authentication"])
-async def register_user(auth_details: AuthDetails):
+def register_user(auth_details: AuthDetails):
     if any(x["username"] == auth_details.username for x in users):
         raise HTTPException(
             status_code=400,
@@ -142,10 +143,15 @@ def logged_in_user(username=Depends(auth_handler.auth_wrapper)):
 
 # create posts by authenticated users
 @app.post("/create_post", tags=["Posts"])
-async def create_post(post: PostSchema, username=Depends(auth_handler.auth_wrapper)):
+def create_post(post: PostSchema, username=Depends(auth_handler.auth_wrapper)):
     post.id = len(posts) + 1
     post.author = username
-    posts.append(post.dict())
+    # add post to posts list
+    try:
+        posts.append(post.dict())
+    except:
+        raise HTTPException(status_code=400, detail="Invalid post")
+
     send_posts()
     return {"info": "Post successfully created by " + username}
 
@@ -153,9 +159,8 @@ async def create_post(post: PostSchema, username=Depends(auth_handler.auth_wrapp
 # get all the posts
 @app.get("/posts", tags=["Posts"])
 def get_all_posts(username=Depends(auth_handler.auth_wrapper)):
-    if len(posts) == 0:
-        return {"info": "No posts found"}
-    return {"All posts": posts}
+    update_posts()
+    return {"posts": posts}
 
 
 # get posts by id
