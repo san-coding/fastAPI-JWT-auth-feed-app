@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from .auth import AuthHandler
-from .schemas import AuthDetails
+from .schemas import AuthDetails, PostSchema
 
 
 app = FastAPI()
@@ -8,6 +8,15 @@ app = FastAPI()
 
 auth_handler = AuthHandler()
 users = []
+
+posts = [
+    {
+        "id": 1,
+        "title": "First Post",
+        "content": "Edvora is a cool place to work",
+        "author": "Sandeep Rajakrishnan",
+    }
+]
 
 
 @app.get("/", tags=["Home page"])
@@ -49,10 +58,36 @@ def login_user(auth_details: AuthDetails):
     return {"token": token}
 
 
-@app.get("/protected", tags=["User Authentication"])
-def protected(username=Depends(auth_handler.auth_wrapper)):
+@app.get("/logged_in_user", tags=["User Authentication"])
+def logged_in_user(username=Depends(auth_handler.auth_wrapper)):
     # extract name from username
     for user in users:
         if user["username"] == username:
             return {"info": "Logged in as " + user["name"]}
     raise HTTPException(status_code=404, detail="User not found")
+
+
+# get all the posts
+@app.get("/posts", tags=["Posts"])
+def get_all_posts():
+    if len(posts) == 0:
+        return {"info": "No posts found"}
+    return {"All posts": posts}
+
+
+# get posts by id
+@app.get("/posts/{id}", tags=["Posts"])
+def get_post_by_id(id: int):
+    if id > len(posts):
+        return {"error": "Post not found"}
+    else:
+        return {"Post": posts[id - 1]}
+
+
+# create posts by authenticated users
+@app.post("/create_post", tags=["Posts"])
+def create_post(post: PostSchema, username=Depends(auth_handler.auth_wrapper)):
+    post.id = len(posts) + 1
+    post.author = username
+    posts.append(post.dict())
+    return {"info": "Post successfully created by " + username}
