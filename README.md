@@ -3,7 +3,8 @@
 - Backend for feed application that allows JWT Authenticated users to create, post and view feed/status/tweet.
 - Data is stored and accessed from mongoDB atlas cluster hosted on AWS.
 - Used FastAPI for creating API endpoints.
-- This is my submission for Edvora backend internship assignment
+
+### This is my submission for Edvora backend internship assignment
 
 ## Functionalities 
 - User authentication with JSON Web tokens (JWT)
