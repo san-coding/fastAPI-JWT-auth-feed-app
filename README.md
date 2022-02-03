@@ -5,7 +5,8 @@
 - Used FastAPI for creating API endpoints.
 
 ### This is my submission for Edvora backend internship assignment
-
+## Demo Video
+Link to demo video : https://youtu.be/KRYPuZnvHvM
 ## Functionalities 
 - User authentication with JSON Web tokens (JWT)
 - Users have to register.
