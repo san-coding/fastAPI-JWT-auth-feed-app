@@ -73,11 +73,25 @@ for file in user_files:
     )
 
 # homepage
-@app.get("/", tags=["Home page"])
-def home():
+@app.get("/", tags=["Welcome to JWT Authenticated feed app, connected to MongoDB"])
+def view_functionalities():
     # return html and json as response
 
-    return {"hello": "Welcome to feed app"}
+    return [
+        {"hello": "Welcome to feed app"},
+        {
+            "Functionalities": [
+                {"Registration": "Users have to register"},
+                {
+                    "Login": "Users have to login to view and create posts / get access to protected routes"
+                },
+                {"Posts": "Authenticated users can create and view posts"},
+                {
+                    "Viewing posts": "Protected routes can be accessed by authenticated users to view all posts, search & view post by id, view posts by a particular author"
+                },
+            ]
+        },
+    ]
 
 
 # user registration
@@ -138,7 +152,7 @@ async def create_post(post: PostSchema, username=Depends(auth_handler.auth_wrapp
 
 # get all the posts
 @app.get("/posts", tags=["Posts"])
-def get_all_posts():
+def get_all_posts(username=Depends(auth_handler.auth_wrapper)):
     if len(posts) == 0:
         return {"info": "No posts found"}
     return {"All posts": posts}
@@ -163,6 +177,6 @@ def get_post_by_username(user: str, username=Depends(auth_handler.auth_wrapper))
         return {"info": "No posts found"}
     user_posts = []
     for post in posts:
-        if post["author"] == username:
+        if post["author"] == user:
             user_posts.append(post)
     return {" posts": user_posts}
