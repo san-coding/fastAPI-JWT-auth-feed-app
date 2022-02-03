@@ -6,6 +6,7 @@ class PostSchema(BaseModel):
     id: int = Field(default=None)
     title: str = Field(default=None)
     content: str = Field(default=None)
+    author: str = Field(default=None)
 
     class Config:
         schema_extra = {
