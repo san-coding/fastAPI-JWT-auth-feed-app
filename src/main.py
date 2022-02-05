@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from .auth import AuthHandler
-from .schemas import AuthDetails, PostSchema
+from .schemas import AuthDetails, LoginDetails, PostSchema
 from pymongo import MongoClient
 from decouple import config
 
@@ -117,7 +117,7 @@ def register_user(auth_details: AuthDetails):
 
 # user login
 @app.post("/login", tags=["User Authentication"])
-def login_user(auth_details: AuthDetails):
+def login_user(auth_details: LoginDetails):
     user = None
     for x in users:
         if x["username"] == auth_details.username:

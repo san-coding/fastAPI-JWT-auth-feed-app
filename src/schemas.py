@@ -10,6 +10,11 @@ class AuthDetails(BaseModel):
     password: str
 
 
+class LoginDetails(BaseModel):
+    username: str
+    password: str
+
+
 class PostSchema(BaseModel):
     id: int = Field(default=None, alias="_id")
     title: str = Field(default=None)
