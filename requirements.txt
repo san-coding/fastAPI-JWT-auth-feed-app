@@ -65,7 +65,6 @@ pipreqs==0.4.10
 pkginfo==1.7.0
 ply==3.11
 protobuf==3.17.3
-pyarrow==5.0.0
 PyAutoGUI==0.9.53
 pycosat==0.6.3
 pycurl==7.43.0.6
