@@ -72,6 +72,8 @@ def get_users():
         )
 
 
+get_users()
+
 # homepage
 @app.get("/", tags=["Welcome to JWT Authenticated feed app, connected to MongoDB"])
 def view_functionalities():
@@ -118,7 +120,7 @@ def register_user(auth_details: AuthDetails):
 # user login
 @app.post("/login", tags=["User Authentication"])
 def login_user(auth_details: LoginDetails):
-    user = None
+    global users
     for x in users:
         if x["username"] == auth_details.username:
             user = x
