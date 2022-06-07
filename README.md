@@ -4,7 +4,6 @@
 - Data is stored and accessed from mongoDB atlas cluster hosted on AWS.
 - Used FastAPI for creating API endpoints.
 
-### This is my submission for Edvora backend internship assignment
 ## Demo Video
 Link to demo video : https://youtu.be/KRYPuZnvHvM
 ## Functionalities 
